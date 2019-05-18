@@ -50,6 +50,12 @@ class ApiControllerTest {
     @Test
     @DisplayName("ApiController.load(correct request id; list is correct or too big)")
     void load_ok() {
+        final List<Payment> emptyList = Collections.emptyList();
+        Mockito.when(paymentService.addAll(null)).thenReturn(emptyList);
+        Mockito.when(paymentService.addAll(Collections.emptyList())).thenReturn(emptyList);
+        assertEquals(apiController.load(DEFAULT_REQ_ID, null).size(), 0);
+        assertEquals(apiController.load(DEFAULT_REQ_ID, Collections.emptyList()).size(), 0);
+
         final Payment emptyPayment = new Payment();
         final List<Payment> listForLoading = new ArrayList<>(PaymentService.MAX_BATCH_SIZE);
         List<Payment> listOfLoadedPayments = new ArrayList<>(PaymentService.MAX_BATCH_SIZE);
@@ -61,52 +67,42 @@ class ApiControllerTest {
         assertIterableEquals(apiController.load(DEFAULT_REQ_ID, listForLoading), listOfLoadedPayments);
     }
 
-    @Test
-    @DisplayName("ApiController.load(correct request id; empty list of payments)")
-    void load_listIsEmpty() {
-        final List<Payment> emptyList = Collections.emptyList();
-        Mockito.when(paymentService.addAll(null)).thenReturn(emptyList);
-        Mockito.when(paymentService.addAll(Collections.emptyList())).thenReturn(emptyList);
-        assertEquals(apiController.load(DEFAULT_REQ_ID, null).size(), 0);
-        assertEquals(apiController.load(DEFAULT_REQ_ID, Collections.emptyList()).size(), 0);
-    }
-
     private static Stream<Arguments> goodRequests() {
         return Stream.of(
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "2010-04-16T16:30:07.109+07:00");
                     put("to", "2020-04-16T16:30:07.109+07:00");
                   }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "2020-04-16T16:30:07.109+07:00");
                     put("to", "2020-04-16T16:30:07.109+07:00");
                   }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "");
                     put("to", "");
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "");
                     put("to", null);
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", null);
                     put("to", "");
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", null);
                     put("to", null);
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", null);
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "");
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("to", null);
                 }}),
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("to", "");
                 }})
                );
@@ -114,7 +110,7 @@ class ApiControllerTest {
 
     private static Stream<Arguments> badRequests() {
         return Stream.of(
-                Arguments.of( new LinkedHashMap<String, Object>() {{
+                Arguments.of( new LinkedHashMap<String, String>() {{
                     put("from", "2020-04-16T16:30:07.109+07:00");
                     put("to", "2010-04-16T16:30:07.109+07:00");
                 }})
@@ -123,7 +119,7 @@ class ApiControllerTest {
 
     @ParameterizedTest
     @MethodSource("goodRequests")
-    @DisplayName("ApiController.countBySender(correct request id; request is also correct)")
+    @DisplayName("ApiController.countBySender(correct actor; correct request id; request is also correct)")
     void countBySender_ok(Map<String, String> request) {
         final Double senderSpent = 100.99;
         Mockito.when(paymentService.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(senderSpent);
@@ -135,14 +131,14 @@ class ApiControllerTest {
 
     @ParameterizedTest
     @MethodSource("badRequests")
-    @DisplayName("ApiController.countBySender(correct request id; request is bad)")
+    @DisplayName("ApiController.countBySender(correct actor; correct request id; request is bad)")
     void countBySender_badRequest(Map<String, String> request) {
         assertThrows(IllegalArgumentException.class, () -> apiController.countBySender(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }
 
     @ParameterizedTest
     @MethodSource("goodRequests")
-    @DisplayName("ApiController.countByReceiver(correct request id; request is also correct)")
+    @DisplayName("ApiController.countByReceiver(correct actor; correct request id; request is also correct)")
     void countByReceiver_ok(Map<String, String> request) {
         final Double receiverGet = 100.99;
         Mockito.when(paymentService.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(receiverGet);
@@ -154,14 +150,14 @@ class ApiControllerTest {
 
     @ParameterizedTest
     @MethodSource("badRequests")
-    @DisplayName("ApiController.countByReceiver(correct request id; request is bad)")
+    @DisplayName("ApiController.countByReceiver(correct actor; correct request id; request is bad)")
     void countByReceiver_badRequest(Map<String, String> request) {
         assertThrows(IllegalArgumentException.class, () -> apiController.countByReceiver(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }
 
     @ParameterizedTest
     @MethodSource("goodRequests")
-    @DisplayName("ApiController.countBalance(correct request id; request is also correct)")
+    @DisplayName("ApiController.countBalance(correct actor; correct request id; request is also correct)")
     void countBalance_ok(Map<String, String> request) {
         final Double receiverGet = 100.99;
         Mockito.when(paymentService.countBalance(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(receiverGet);
@@ -173,7 +169,7 @@ class ApiControllerTest {
 
     @ParameterizedTest
     @MethodSource("badRequests")
-    @DisplayName("ApiController.countBalance(correct request id; request is bad)")
+    @DisplayName("ApiController.countBalance(correct actor; correct request id; request is bad)")
     void countBalance_badRequest(Map<String, String> request) {
         assertThrows(IllegalArgumentException.class, () -> apiController.countBalance(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }

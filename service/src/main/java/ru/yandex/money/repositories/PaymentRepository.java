@@ -32,64 +32,44 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
                , @Param("_amount") Double amount);
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.sender = :_sender and :_from_date <= p.createDate and :_to_date >= p.createDate")
-    Double countBySender( @Param("_sender") String sender
+    @Query("select sum(p.amount) from Payment p where p.sender = :_actor and :_from_date <= p.createDate and :_to_date >= p.createDate")
+    Double countBySender( @Param("_actor") String actor
                         , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate
                         , @Param("_to_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime toDate);
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.sender = :_sender and :_from_date >= p.createDate")
-    Double countBySenderReverse( @Param("_sender") String sender
+    @Query("select sum(p.amount) from Payment p where p.sender = :_actor and :_from_date >= p.createDate")
+    Double countBySenderReverse( @Param("_actor") String actor
                                , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate );
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.sender = :_sender and :_from_date <= p.createDate")
-    Double countBySender( @Param("_sender") String sender
-            , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate );
+    @Query("select sum(p.amount) from Payment p where p.sender = :_actor and :_from_date <= p.createDate")
+    Double countBySender( @Param("_actor") String actor
+                        , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate );
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.sender = :_sender ")
-    Double countBySender( @Param("_sender") String sender );
+    @Query("select sum(p.amount) from Payment p where p.sender = :_actor ")
+    Double countBySender( @Param("_actor") String actor );
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.receiver = :_receiver and :_from_date <= p.createDate and :_to_date >= p.createDate")
-    Double countByReceiver( @Param("_receiver") String receiver
+    @Query("select sum(p.amount) from Payment p where p.receiver = :_actor and :_from_date <= p.createDate and :_to_date >= p.createDate")
+    Double countByReceiver( @Param("_actor") String actor
                           , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate
                           , @Param("_to_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime toDate);
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.receiver = :_receiver and :_from_date <= p.createDate")
-    Double countByReceiver( @Param("_receiver") String receiver
+    @Query("select sum(p.amount) from Payment p where p.receiver = :_actor and :_from_date <= p.createDate")
+    Double countByReceiver( @Param("_actor") String actor
                           , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate);
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.receiver = :_receiver and :_from_date >= p.createDate")
-    Double countByReceiverReverse( @Param("_receiver") String receiver
+    @Query("select sum(p.amount) from Payment p where p.receiver = :_actor and :_from_date >= p.createDate")
+    Double countByReceiverReverse( @Param("_actor") String actor
                                  , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate);
 
     @Transactional(readOnly = true)
-    @Query("select sum(p.amount) from Payment p where p.receiver = :_receiver")
-    Double countByReceiver( @Param("_receiver") String receiver );
-
-    @Transactional(readOnly = true)
-    @Query("select sum(r.amount) - sum(s.amount) from Payment r, Payment s where (r.receiver = :_actor and :_from_date <= r.createDate and :_to_date >= r.createDate) or (s.sender = :_actor and :_from_date <= s.createDate and :_to_date >= s.createDate)")
-    Double countBalance( @Param("_actor") String actor
-                       , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate
-                       , @Param("_to_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime toDate);
-
-    @Transactional(readOnly = true)
-    @Query("select sum(r.amount) - sum(s.amount) from Payment r, Payment s where (r.receiver = :_actor and :_from_date <= r.createDate) or (s.sender = :_actor and :_from_date <= s.createDate)")
-    Double countBalance( @Param("_actor") String actor
-                       , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate);
-
-    @Transactional(readOnly = true)
-    @Query("select sum(r.amount) - sum(s.amount) from Payment r, Payment s where (r.receiver = :_actor and :_from_date >= r.createDate) or (s.sender = :_actor and :_from_date >= s.createDate)")
-    Double countBalanceReverse( @Param("_actor") String actor
-                              , @Param("_from_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate);
-
-    @Transactional(readOnly = true)
-    @Query("select sum(r.amount) - sum(s.amount) from Payment r, Payment s where r.receiver = :_actor or s.sender = :_actor")
-    Double countBalance( @Param("_actor") String actor );
+    @Query("select sum(p.amount) from Payment p where p.receiver = :_actor")
+    Double countByReceiver( @Param("_actor") String actor );
 
     @Modifying(clearAutomatically = true)
     void deleteById(long id);

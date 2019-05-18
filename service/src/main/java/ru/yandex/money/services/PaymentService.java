@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.yandex.money.repositories.PaymentRepository;
 import ru.yandex.money.repositories.entities.Payment;
 
+import com.google.common.base.Objects;
+
 @Service
 @Transactional
 @Slf4j
@@ -100,15 +102,15 @@ public class PaymentService {
         }
         Double result;
         if (from != null && to != null) {
-            result = paymentRepository.countBalance(actor, from, to);
+            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor, from, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor, from, to), NumberUtils.DOUBLE_ZERO);
         } else if (from != null) {
-            result = paymentRepository.countBalance(actor, from);
+            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor, from), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor, from), NumberUtils.DOUBLE_ZERO);
         } else if (to != null) {
-            result = paymentRepository.countBalanceReverse(actor, to);
+            result = Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO);
         } else {
-            result = paymentRepository.countBalance(actor);
+            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO);
         }
-        return result == null ? NumberUtils.DOUBLE_ZERO : result;
+        return result;
     }
 
 }

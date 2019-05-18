@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,37 +69,37 @@ public class ApiController {
     }
 
     @PostMapping("payment/load")
-    public List<Payment> load( @RequestParam(value = "req_id") @NotBlank String reqId
+    public List<Payment> load( @RequestParam("req_id") @NotBlank String reqId
                              , @RequestBody List<Payment> listOfPayments) {
         final List<Payment> loadedPayments = paymentService.addAll(listOfPayments);
         log.info("Request \"" + Thread.currentThread().getStackTrace()[1].getMethodName() + "\" №" + reqId + " has successfully processed");
         return loadedPayments;
     }
 
-    @PostMapping("payment/count-by-sender")
-    public Double countBySender( @RequestParam(value = "req_id") @NotBlank String reqId
+    @PostMapping("payment/count-by-sender/{actor}")
+    public Double countBySender( @PathVariable("actor") @NotBlank String actor
+                               , @RequestParam("req_id") @NotBlank String reqId
                                , @RequestBody Map<String, String> request ) {
-        final String sender = request.get("sender");
         final DateRange dateRange = new DateRange(request.get("from"), request.get("to"));
-        final Double payedBySender = paymentService.countBySender(sender, dateRange.getFrom(), dateRange.getTo());
+        final Double payedBySender = paymentService.countBySender(actor, dateRange.getFrom(), dateRange.getTo());
         log.info("Request \"" + Thread.currentThread().getStackTrace()[1].getMethodName() + "\" №" + reqId + " has successfully processed");
         return payedBySender;
     }
 
-    @PostMapping("payment/count-by-receiver")
-    public Double countByReceiver( @RequestParam(value = "req_id") @NotBlank String reqId
+    @PostMapping("payment/count-by-receiver/{actor}")
+    public Double countByReceiver( @PathVariable("actor") @NotBlank String actor
+                                 , @RequestParam("req_id") @NotBlank String reqId
                                  , @RequestBody Map<String, String> request ) {
-        final String receiver = request.get("receiver");
         final DateRange dateRange = new DateRange(request.get("from"), request.get("to"));
-        final Double earnedByReceiver = paymentService.countByReceiver(receiver, dateRange.getFrom(), dateRange.getTo());
+        final Double earnedByReceiver = paymentService.countByReceiver(actor, dateRange.getFrom(), dateRange.getTo());
         log.info("Request \"" + Thread.currentThread().getStackTrace()[1].getMethodName() + "\" №" + reqId + " has successfully processed");
         return earnedByReceiver;
     }
 
-    @PostMapping("payment/count-balance")
-    public Double countBalance( @RequestParam(value = "req_id") @NotBlank String reqId
+    @PostMapping("payment/count-balance/{actor}")
+    public Double countBalance( @PathVariable("actor") @NotBlank String actor
+                              , @RequestParam("req_id") @NotBlank String reqId
                               , @RequestBody Map<String, String> request) {
-        final String actor = request.get("actor");
         final DateRange dateRange = new DateRange(request.get("from"), request.get("to"));
         final Double balanceByActor = paymentService.countBalance(actor, dateRange.getFrom(), dateRange.getTo());
         log.info("Request \"" + Thread.currentThread().getStackTrace()[1].getMethodName() + "\" №" + reqId + " has successfully processed");

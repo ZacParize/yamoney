@@ -1,0 +1,77 @@
+archivesBaseName = 'sharding'
+group = parent.group
+version = parent.version
+
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    mainClassName = "${servicePackage}.ServiceApplication"
+}
+
+dependencyManagement {
+    resolutionStrategy {
+        cacheDynamicVersionsFor 5, 'minutes'
+        cacheChangingModulesFor 0, 'minutes'
+    }
+}
+
+dependencies {
+
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE",
+                "org.projectlombok:lombok:1.18.4"
+
+    compile "org.apache.commons:commons-lang3:3.8.1",
+            "org.postgresql:postgresql:42.2.5",
+            "org.flywaydb:flyway-core:5.2.4",
+            "javax.validation:validation-api:2.0.1.Final"
+
+    compile "org.reactivestreams:reactive-streams:1.0.2"
+
+    compile "org.springframework.boot:spring-boot-starter-undertow:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-actuator:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-data-rest:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-data-jpa:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-web:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-aop:2.1.0.RELEASE",
+            "org.springframework.boot:spring-boot-starter-parent:2.1.0.RELEASE"
+
+    compile "org.springframework.cloud:spring-cloud-starter-config:2.0.2.RELEASE",
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.0.2.RELEASE",
+            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.0.2.RELEASE"
+
+    compile "org.hibernate:hibernate-validator:6.0.13.Final",
+            "org.hibernate:hibernate-core:5.3.6.Final",
+            "org.hibernate:hibernate-entitymanager:5.3.6.Final",
+            "org.hibernate:hibernate-java8:5.3.6.Final"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test",
+                "org.springframework.cloud:spring-cloud-stream-test-support",
+                "org.junit.jupiter:junit-jupiter-api",
+                "org.junit.jupiter:junit-jupiter-params",
+                "org.junit.vintage:junit-vintage-engine",
+                "org.testcontainers:testcontainers:1.10.1"
+
+    testCompileOnly "org.projectlombok:lombok"
+
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+configurations.all {
+    all*.exclude group: 'com.vaadin.external.google'
+    all*.exclude group: "commons-logging", module: "commons-logging"
+    all*.exclude group: "log4j"
+    all*.exclude group: "org.apache.logging.log4j"
+    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+    all*.exclude group: "org.slf4j", module: "slf4j-simple"
+    all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+}
+
+//allow to put resources next to java code
+sourceSets {
+    test {
+        resources {
+            srcDirs += test.java.srcDirs
+            exclude '**/*.java'
+        }
+    }
+}

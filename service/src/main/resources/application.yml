@@ -1,0 +1,99 @@
+info:
+  version: 1.0
+  description: Yandex Money
+
+server:
+  port: ${spring.application.port:8001}
+  servlet:
+    context-path:
+    session:
+      cookie:
+        name: JSESSIONIDYANDEXMONEY
+
+management:
+  server:
+    port: ${server.port}
+    servlet:
+      context-path: /manage
+  endpoint:
+    jolokia:
+      enabled: false
+    liquibase:
+      enabled: false
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /manage
+      exposure:
+        include: ['health', 'info', 'env']
+  info:
+    env:
+      enabled: true
+
+encrypt:
+  failOnError: false
+
+health:
+  config:
+    enabled: false
+
+eureka:
+  client:
+    enabled: false
+
+spring:
+  flyway:
+    locations: classpath:db/migration/postgres
+    sql-migration-prefix: up
+  jackson:
+    default-property-inclusion: non_empty
+    mapper:
+      auto_detect_creators: false
+      auto_detect_setters: true
+      auto_detect_getters: true
+      auto_detect_is_getters: true
+      accept_case_insensitive_properties: true
+      accept_case_insensitive_enums: true
+    deserialization:
+      fail_on_unknown_properties: true
+    parser:
+      allow_backslash_escaping_any_character: true
+    property-naming-strategy: LOWER_CAMEL_CASE
+    locale: ru_RU
+  datasource:
+    url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port:5432}/${postgres.schema:postgres}
+    username: ${postgres.user:postgres}
+    password: ${postgres.password:postgres}
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: never
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        jdbc:
+          fetch_size: 100
+        use_lazy_proxy_factory: true
+        format_sql: true
+        use_sql_comments: true
+        enable_lazy_load_no_trans: true
+  messages:
+    basename: messages, apidoc, ValidationMessages
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  mandatory-file-encoding: UTF-8
+  mvc:
+    locale: ru_RU
+  main:
+    banner-mode: 'off'
+  servlet:
+    multipart:
+      max-request-size: 50MB
+  sleuth:
+    sampler:
+      percentage: 1.0

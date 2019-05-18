@@ -1,0 +1,148 @@
+/*
+ * build.gradle
+ *
+ * Copyright 2017-2019 BCS-Technologies. All Rights Reserved.
+ *
+ * This software is the proprietary information of BCS-Technologies.
+ * Use is subject to license terms.
+ */
+
+group = 'ru.yandex.service'
+
+rootProject.wrapper.gradleVersion = '4.6'
+
+buildscript {
+    ext {
+        servicePackage = 'ru.yandex'
+        servicePackageSlashes = servicePackage.replace('.', '/')
+
+        ver = [
+                springBoot              : '2.0.5.RELEASE',
+                dependencyManagement    : '1.0.6.RELEASE',
+        ]
+    }
+
+    repositories {
+        jcenter()
+
+        maven {
+            url "https://maven.springframework.org/release"
+        }
+        maven {
+            url "https://maven.restlet.com"
+        }
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:$ver.dependencyManagement",
+                  "org.springframework.boot:spring-boot-gradle-plugin:$ver.springBoot"
+    }
+}
+
+ext {
+    defaultEncoding = 'UTF-8'
+
+    releaseName = System.getenv("releaseName") ?: System.getProperty("releaseName") ?: "0"
+    branch = System.getenv("branch") ?: System.getProperty("branch") ?: "0"
+    revision = System.getenv("buildRev") ?: System.getProperty("buildRev") ?: ""
+}
+
+allprojects {
+    repositories {
+        rootProject.buildscript.repositories.each {
+            repositories.add(it)
+        }
+    }
+
+    apply plugin: 'jacoco'
+}
+
+apply plugin: 'idea'
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    compileJava {
+        options.encoding = defaultEncoding
+        options.compilerArgs = ['-parameters', '-Xlint:unchecked']
+    }
+
+    compileTestJava {
+        options.encoding = defaultEncoding
+        options.compilerArgs = ['-parameters', '-Xlint:unchecked']
+    }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+
+    tasks.withType(Javadoc) {
+        options.encoding = defaultEncoding
+        options.memberLevel = JavadocMemberLevel.PRIVATE
+        options.addBooleanOption("Xdoclint:all").setValue(true)
+    }
+
+    test {
+
+        systemProperty 'spring.profiles.active', 'test'
+        systemProperty 'user.language', 'ru'
+        systemProperty 'user.country', 'RU'
+
+        jacoco {
+            excludes = [
+                    servicePackageSlashes + '/**/BizTalkSource.*',
+                    servicePackageSlashes + '/**/*AutoConfiguration.*',
+                    servicePackageSlashes + '/api/Api.*',
+                    servicePackageSlashes + '/ServiceApplication.*',
+            ]
+        }
+
+        useJUnitPlatform {
+            includeEngines 'junit-jupiter'
+            excludeTags 'inttest'
+        }
+        reports {
+            junitXml.enabled true
+            html.enabled false
+        }
+
+        failFast = System.getProperty('failFast') != null
+        maxParallelForks = 1
+        //forkEvery = 1
+        include servicePackageSlashes + '/**/*Test.class'
+//        minHeapSize = "1600m"
+//        maxHeapSize = "2g"
+
+        testLogging {
+            events 'skipped', 'failed'
+
+            exceptionFormat = 'full'
+
+            info {
+                events "passed", "skipped", "failed"
+            }
+        }
+
+    }
+
+}
+
+idea {
+
+    if (parent == null) {
+        project {
+            languageLevel = '1.8'
+            vcs = 'Git'
+        }
+    }
+
+    module {
+        excludeDirs += file('.idea')
+    }
+}

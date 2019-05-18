@@ -1,0 +1,15 @@
+postgres:
+  host: localhost
+  port: 5432
+  schema: dbpayments
+  user: dbpayments
+  password: dbpayments
+
+spring:
+  application:
+    port: 8001
+  profiles:
+    active: dev
+  cloud:
+    config:
+      enabled: false

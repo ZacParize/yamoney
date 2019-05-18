@@ -1,0 +1,10 @@
+/*
+ * settings.gradle
+ *
+ * Copyright 2017-2019 BCS-Technologies. All Rights Reserved.
+ *
+ * This software is the proprietary information of BCS-Technologies.
+ * Use is subject to license terms.
+ */
+
+include "service"

@@ -106,9 +106,9 @@ public class PaymentService {
         } else if (from != null) {
             result = Objects.firstNonNull(paymentRepository.countByReceiver(actor, from), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor, from), NumberUtils.DOUBLE_ZERO);
         } else if (to != null) {
-            result = Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO);
+            result = Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySenderReverse(actor, to), NumberUtils.DOUBLE_ZERO);
         } else {
-            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO);
+            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor), NumberUtils.DOUBLE_ZERO);
         }
         return result;
     }

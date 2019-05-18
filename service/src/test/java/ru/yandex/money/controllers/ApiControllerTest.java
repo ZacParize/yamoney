@@ -12,13 +12,17 @@ package ru.yandex.money.controllers;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import ru.yandex.money.repositories.entities.Payment;
@@ -33,6 +37,7 @@ import static org.mockito.ArgumentMatchers.isNull;
 class ApiControllerTest {
 
     private static final String DEFAULT_REQ_ID = "defaultReqId";
+    private static final String DEFAULT_ACTOR = "defaultActor";
     private PaymentService paymentService;
     private ApiController apiController;
 
@@ -66,183 +71,111 @@ class ApiControllerTest {
         assertEquals(apiController.load(DEFAULT_REQ_ID, Collections.emptyList()).size(), 0);
     }
 
-    @Test
+    private static Stream<Arguments> goodRequests() {
+        return Stream.of(
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "2010-04-16T16:30:07.109+07:00");
+                    put("to", "2020-04-16T16:30:07.109+07:00");
+                  }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "2020-04-16T16:30:07.109+07:00");
+                    put("to", "2020-04-16T16:30:07.109+07:00");
+                  }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "");
+                    put("to", "");
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "");
+                    put("to", null);
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", null);
+                    put("to", "");
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", null);
+                    put("to", null);
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", null);
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "");
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("to", null);
+                }}),
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("to", "");
+                }})
+               );
+    }
+
+    private static Stream<Arguments> badRequests() {
+        return Stream.of(
+                Arguments.of( new LinkedHashMap<String, Object>() {{
+                    put("from", "2020-04-16T16:30:07.109+07:00");
+                    put("to", "2010-04-16T16:30:07.109+07:00");
+                }})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("goodRequests")
     @DisplayName("ApiController.countBySender(correct request id; request is also correct)")
-    void countBySender_ok() {
+    void countBySender_ok(Map<String, String> request) {
         final Double senderSpent = 100.99;
-        final String actor = "actor";
         Mockito.when(paymentService.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(senderSpent);
         Mockito.when(paymentService.countBySender(any(String.class), any(ZonedDateTime.class), isNull())).thenReturn(senderSpent);
         Mockito.when(paymentService.countBySender(any(String.class), isNull(), any(ZonedDateTime.class))).thenReturn(senderSpent);
         Mockito.when(paymentService.countBySender(any(String.class), isNull(), isNull())).thenReturn(senderSpent);
-
-        final Map<String, String> request = new HashMap<>();
-        request.put("from", "2010-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("from", "");
-        request.put("to", "");
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("from", "");
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("to", "");
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("from", null);
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("to", null);
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
-
-        request.clear();
-        request.put("from", null);
-        request.put("to", null);
-        assertEquals(apiController.countBySender(actor, DEFAULT_REQ_ID, request), senderSpent);
+        assertEquals(apiController.countBySender(DEFAULT_ACTOR, DEFAULT_REQ_ID, request), senderSpent);
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("badRequests")
     @DisplayName("ApiController.countBySender(correct request id; request is bad)")
-    void countBySender_badRequestParams() {
-        final String actor = "actor";
-        final Map<String, String> request = new HashMap<>();
-        request.put("actor", "actor");
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2010-04-16T16:30:07.109+07:00");
-        assertThrows(IllegalArgumentException.class, () -> apiController.countBySender(actor, DEFAULT_REQ_ID, request));
+    void countBySender_badRequest(Map<String, String> request) {
+        assertThrows(IllegalArgumentException.class, () -> apiController.countBySender(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("goodRequests")
     @DisplayName("ApiController.countByReceiver(correct request id; request is also correct)")
-    void countByReceiver_ok() {
+    void countByReceiver_ok(Map<String, String> request) {
         final Double receiverGet = 100.99;
-        final String actor = "actor";
         Mockito.when(paymentService.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(receiverGet);
         Mockito.when(paymentService.countByReceiver(any(String.class), any(ZonedDateTime.class), isNull())).thenReturn(receiverGet);
         Mockito.when(paymentService.countByReceiver(any(String.class), isNull(), any(ZonedDateTime.class))).thenReturn(receiverGet);
         Mockito.when(paymentService.countByReceiver(any(String.class), isNull(), isNull())).thenReturn(receiverGet);
-        final Map<String, String> request = new HashMap<>();
-        request.put("from", "2010-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "");
-        request.put("to", "");
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "");
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("to", "");
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", null);
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("to", null);
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", null);
-        request.put("to", null);
-        assertEquals(apiController.countByReceiver(actor, DEFAULT_REQ_ID, request), receiverGet);
+        assertEquals(apiController.countByReceiver(DEFAULT_ACTOR, DEFAULT_REQ_ID, request), receiverGet);
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("badRequests")
     @DisplayName("ApiController.countByReceiver(correct request id; request is bad)")
-    void countByReceiver_badRequestParams() {
-        final String actor = "actor";
-        final Map<String, String> request = new HashMap<>();
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2010-04-16T16:30:07.109+07:00");
-        assertThrows(IllegalArgumentException.class, () -> apiController.countByReceiver(actor, DEFAULT_REQ_ID, request));
+    void countByReceiver_badRequest(Map<String, String> request) {
+        assertThrows(IllegalArgumentException.class, () -> apiController.countByReceiver(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("goodRequests")
     @DisplayName("ApiController.countBalance(correct request id; request is also correct)")
-    void countBalance_allIsOk() {
-        final String actor = "actor";
+    void countBalance_ok(Map<String, String> request) {
         final Double receiverGet = 100.99;
         Mockito.when(paymentService.countBalance(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(receiverGet);
         Mockito.when(paymentService.countBalance(any(String.class), any(ZonedDateTime.class), isNull())).thenReturn(receiverGet);
         Mockito.when(paymentService.countBalance(any(String.class), isNull(), any(ZonedDateTime.class))).thenReturn(receiverGet);
         Mockito.when(paymentService.countBalance(any(String.class), isNull(), isNull())).thenReturn(receiverGet);
-        final Map<String, String> request = new HashMap<>();
-        request.put("from", "2010-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2020-04-16T16:30:07.109+07:00");
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "");
-        request.put("to", "");
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", "");
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("to", "");
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", null);
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("to", null);
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
-
-        request.clear();
-        request.put("from", null);
-        request.put("to", null);
-        assertEquals(apiController.countBalance(actor, DEFAULT_REQ_ID, request), receiverGet);
+        assertEquals(apiController.countBalance(DEFAULT_ACTOR, DEFAULT_REQ_ID, request), receiverGet);
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("badRequests")
     @DisplayName("ApiController.countBalance(correct request id; request is bad)")
-    void countBalance_badRequestParams() {
-        final String actor = "actor";
-        final Map<String, String> request = new HashMap<>();
-        request.put("from", "2020-04-16T16:30:07.109+07:00");
-        request.put("to", "2010-04-16T16:30:07.109+07:00");
-        assertThrows(IllegalArgumentException.class, () -> apiController.countBalance(actor, DEFAULT_REQ_ID, request));
+    void countBalance_badRequest(Map<String, String> request) {
+        assertThrows(IllegalArgumentException.class, () -> apiController.countBalance(DEFAULT_ACTOR, DEFAULT_REQ_ID, request));
     }
 
 }

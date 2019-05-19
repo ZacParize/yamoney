@@ -91,6 +91,7 @@ spring:
     locale: ru_RU
   main:
     banner-mode: 'off'
+    allow-bean-definition-overriding: true
   servlet:
     multipart:
       max-request-size: 50MB

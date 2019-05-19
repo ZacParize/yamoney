@@ -23,6 +23,7 @@ buildscript {
                 springCloud             : '2.0.2.RELEASE',
                 junit                   : '5.3.1',
                 hibernate               : '5.4.2.Final',
+                hibernateValidator      : '6.0.13.Final',
                 postgres                : '42.2.5',
                 apacheCommons           : '3.8.1',
                 flyway                  : '5.2.4',

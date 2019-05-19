@@ -41,7 +41,7 @@ dependencies {
             "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:$ver.springCloud",
             "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$ver.springCloud"
 
-    compile "org.hibernate:hibernate-validator:$ver.hibernate",
+    compile "org.hibernate.validator:hibernate-validator:$ver.hibernateValidator",
             "org.hibernate:hibernate-core:$ver.hibernate",
             "org.hibernate:hibernate-entitymanager:$ver.hibernate",
             "org.hibernate:hibernate-java8:$ver.hibernate"

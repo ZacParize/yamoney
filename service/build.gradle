@@ -42,16 +42,15 @@ dependencies {
             "org.hibernate:hibernate-entitymanager:5.3.6.Final",
             "org.hibernate:hibernate-java8:5.3.6.Final"
 
-    testCompile "org.springframework.boot:spring-boot-starter-test",
-                "org.springframework.cloud:spring-cloud-stream-test-support",
-                "org.junit.jupiter:junit-jupiter-api",
-                "org.junit.jupiter:junit-jupiter-params",
-                "org.junit.vintage:junit-vintage-engine",
+    testCompile "org.springframework.boot:spring-boot-starter-test:2.1.0.RELEASE",
+                "org.junit.jupiter:junit-jupiter-api:5.3.1",
+                "org.junit.jupiter:junit-jupiter-params:5.3.1",
+                "org.junit.vintage:junit-vintage-engine:5.3.1",
                 "org.testcontainers:testcontainers:1.10.1"
 
-    testCompileOnly "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok:1.18.4"
 
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.1"
 }
 
 configurations.all {

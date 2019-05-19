@@ -45,6 +45,9 @@ public class ApiController {
 
     private final PaymentService paymentService;
 
+    /**
+     * Inner class for date range
+     */
     @Getter
     private class DateRange {
 
@@ -68,6 +71,12 @@ public class ApiController {
         this.paymentService = paymentService;
     }
 
+    /**
+     * Loads list of payments
+     * @param reqId request id
+     * @param listOfPayments list of payments for loading
+     * @return list of loaded payments
+     */
     @PostMapping("payment/load")
     public List<Payment> load( @RequestParam("req_id") @NotBlank String reqId
                              , @RequestBody List<Payment> listOfPayments) {
@@ -76,6 +85,13 @@ public class ApiController {
         return loadedPayments;
     }
 
+    /**
+     * Returns sum of payments by actor for period
+     * @param reqId request id
+     * @param actor payment sender
+     * @param request request contains start and end date of period
+     * @return sum of payments
+     */
     @PostMapping("payment/count-by-sender/{actor}")
     public Double countBySender( @PathVariable("actor") @NotBlank String actor
                                , @RequestParam("req_id") @NotBlank String reqId
@@ -86,6 +102,13 @@ public class ApiController {
         return payedBySender;
     }
 
+    /**
+     * Returns sum of payments by actor for period
+     * @param reqId request id
+     * @param actor payment sender
+     * @param request request contains start and end date of period
+     * @return sum of payments
+     */
     @PostMapping("payment/count-by-receiver/{actor}")
     public Double countByReceiver( @PathVariable("actor") @NotBlank String actor
                                  , @RequestParam("req_id") @NotBlank String reqId
@@ -96,6 +119,13 @@ public class ApiController {
         return earnedByReceiver;
     }
 
+    /**
+     * Returns balance of payments by actor for period
+     * @param reqId request id
+     * @param actor payment sender
+     * @param request request contains start and end date of period
+     * @return balance of payments
+     */
     @PostMapping("payment/count-balance/{actor}")
     public Double countBalance( @PathVariable("actor") @NotBlank String actor
                               , @RequestParam("req_id") @NotBlank String reqId

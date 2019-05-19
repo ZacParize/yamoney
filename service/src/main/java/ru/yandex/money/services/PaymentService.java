@@ -26,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 import ru.yandex.money.repositories.PaymentRepository;
 import ru.yandex.money.repositories.entities.Payment;
 
+/**
+ * Service for different manipulations with payments
+ */
 @Service
 @Transactional
 @Slf4j
@@ -40,6 +43,12 @@ public class PaymentService {
         this.paymentRepository = paymentRepo;
     }
 
+    /**
+     * Loads list of payments
+     * @param listOfPayments list of payments for loading
+     * @throws IllegalArgumentException if size of payments list is too big
+     * @return list of loaded payments
+     */
     public List<Payment> addAll(List<Payment> listOfPayments) {
         if (CollectionUtils.isEmpty(listOfPayments)) {
             return Collections.emptyList();
@@ -58,6 +67,14 @@ public class PaymentService {
         return resultListOfPayments;
     }
 
+    /**
+     * Returns sum of payments by sender for period
+     * @param sender payment sender
+     * @param from start date of period
+     * @param to end date of period
+     * @throws IllegalArgumentException if no sender
+     * @return sum of payments
+     */
     @Transactional(readOnly = true)
     public Double countBySender(String sender, ZonedDateTime from, ZonedDateTime to) {
         if (StringUtils.isBlank(sender)) {
@@ -76,6 +93,13 @@ public class PaymentService {
         return result == null ? NumberUtils.DOUBLE_ZERO : result;
     }
 
+    /**
+     * Returns sum of payments by receiver for period
+     * @param sender payment sender
+     * @param from start date of period
+     * @param to end date of period
+     * @return sum of payments
+     */
     @Transactional(readOnly = true)
     public Double countByReceiver(String receiver, ZonedDateTime from, ZonedDateTime to) {
         if (StringUtils.isBlank(receiver)) {
@@ -94,7 +118,13 @@ public class PaymentService {
         return result == null ? NumberUtils.DOUBLE_ZERO : result;
     }
 
-
+    /**
+     * Returns balance of payments (received - spent) by actor for period
+     * @param actor payment sender
+     * @param from start date of period
+     * @param to end date of period
+     * @return balance of payments
+     */
     @Transactional(readOnly = true)
     public Double countBalance(String actor, ZonedDateTime from, ZonedDateTime to) {
         if (StringUtils.isBlank(actor)) {

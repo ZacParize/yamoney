@@ -35,3 +35,47 @@ There is no specified API module in project.
 But it could be in case of clarification requirements. 
 
 The microservice returns values "as is".
+
+Methods:
+
+1) POST /api/payment/load?req_id={reqId} - load batch of payments.
+
+BODY: array of payments.
+
+NOTE: batch size is less or equals 500.
+
+Example: 
+    
+    http://localhost:8001/api/payment/load?req_id=1
+    
+    [{"sender":"s1","receiver":"r1","amount":100}, {"sender":"r1","receiver":"r2","amount":100}]
+
+2) POST /api/payment/count-by-receiver/{receiver}?req_id={reqId} - count received amount by receiver
+
+BODY: [from, to] range.
+
+Example: 
+    
+    http://localhost:8001/api/payment/count-by-receiver/r2?req_id=1
+    
+    { "from" : "2020-01-16T16:30:07.109+07:00", "to" : "2020-12-16T16:30:07.109+07:00" }
+
+3) POST /api/payment/count-by-sender/{sender}?req_id={reqId} - count sent amount by sender
+
+BODY: [from, to] range.
+
+Example: 
+    
+    http://localhost:8001/api/payment/count-by-sender/r2?req_id=1
+    
+    { "from" : "2020-01-16T16:30:07.109+07:00", "to" : "2020-12-16T16:30:07.109+07:00" }
+
+4) POST /api/payment/count-balance/{actor}?req_id={reqId} - count balance by actor
+
+BODY: [from, to] range.
+
+Example: 
+    
+    http://localhost:8001/api/payment/count-balance/r2?req_id=1
+    
+    { "from" : "2020-01-16T16:30:07.109+07:00", "to" : "2020-12-16T16:30:07.109+07:00" }

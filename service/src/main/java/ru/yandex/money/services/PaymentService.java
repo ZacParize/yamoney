@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ import org.springframework.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.money.repositories.PaymentRepository;
 import ru.yandex.money.repositories.entities.Payment;
-
-import com.google.common.base.Objects;
 
 @Service
 @Transactional
@@ -102,13 +101,13 @@ public class PaymentService {
         }
         Double result;
         if (from != null && to != null) {
-            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor, from, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor, from, to), NumberUtils.DOUBLE_ZERO);
+            result = ObjectUtils.firstNonNull(paymentRepository.countByReceiver(actor, from, to), NumberUtils.DOUBLE_ZERO) - ObjectUtils.firstNonNull(paymentRepository.countBySender(actor, from, to), NumberUtils.DOUBLE_ZERO);
         } else if (from != null) {
-            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor, from), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor, from), NumberUtils.DOUBLE_ZERO);
+            result = ObjectUtils.firstNonNull(paymentRepository.countByReceiver(actor, from), NumberUtils.DOUBLE_ZERO) - ObjectUtils.firstNonNull(paymentRepository.countBySender(actor, from), NumberUtils.DOUBLE_ZERO);
         } else if (to != null) {
-            result = Objects.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySenderReverse(actor, to), NumberUtils.DOUBLE_ZERO);
+            result = ObjectUtils.firstNonNull(paymentRepository.countByReceiverReverse(actor, to), NumberUtils.DOUBLE_ZERO) - ObjectUtils.firstNonNull(paymentRepository.countBySenderReverse(actor, to), NumberUtils.DOUBLE_ZERO);
         } else {
-            result = Objects.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO) - Objects.firstNonNull(paymentRepository.countBySender(actor), NumberUtils.DOUBLE_ZERO);
+            result = ObjectUtils.firstNonNull(paymentRepository.countByReceiver(actor), NumberUtils.DOUBLE_ZERO) - ObjectUtils.firstNonNull(paymentRepository.countBySender(actor), NumberUtils.DOUBLE_ZERO);
         }
         return result;
     }

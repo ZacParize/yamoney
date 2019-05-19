@@ -7,18 +7,27 @@
  * Use is subject to license terms.
  */
 
-group = 'ru.yandex.service'
+group = 'ru.yandex.money.service'
 
 rootProject.wrapper.gradleVersion = '4.6'
 
 buildscript {
     ext {
-        servicePackage = 'ru.yandex'
+        servicePackage = 'ru.yandex.money'
         servicePackageSlashes = servicePackage.replace('.', '/')
 
         ver = [
-                springBoot              : '2.0.5.RELEASE',
                 dependencyManagement    : '1.0.6.RELEASE',
+                lombok                  : '1.18.4',
+                springBoot              : '2.1.0.RELEASE',
+                springCloud             : '2.0.2.RELEASE',
+                junit                   : '5.3.1',
+                hibernate               : '5.4.2.Final',
+                postgres                : '42.2.5',
+                apacheCommons           : '3.8.1',
+                flyway                  : '5.2.4',
+                validationApi           : '2.0.1.Final',
+                testcontainers          : '1.10.1'
         ]
     }
 
@@ -35,7 +44,8 @@ buildscript {
 
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:$ver.dependencyManagement",
-                  "org.springframework.boot:spring-boot-gradle-plugin:$ver.springBoot"
+                  "org.springframework.boot:spring-boot-gradle-plugin:$ver.springBoot",
+                  "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.4.3"
     }
 }
 
@@ -106,10 +116,6 @@ subprojects {
         useJUnitPlatform {
             includeEngines 'junit-jupiter'
             excludeTags 'inttest'
-        }
-        reports {
-            junitXml.enabled true
-            html.enabled false
         }
 
         failFast = System.getProperty('failFast') != null

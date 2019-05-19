@@ -1,4 +1,4 @@
-archivesBaseName = 'sharding'
+archivesBaseName = 'money-yandex'
 group = parent.group
 version = parent.version
 
@@ -17,40 +17,44 @@ dependencyManagement {
 
 dependencies {
 
-    compileOnly "org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE",
-                "org.projectlombok:lombok:1.18.4"
+    annotationProcessor "org.projectlombok:lombok:$ver.lombok"
+    
+    testAnnotationProcessor "org.projectlombok:lombok:$ver.lombok"
 
-    compile "org.apache.commons:commons-lang3:3.8.1",
-            "org.postgresql:postgresql:42.2.5",
-            "org.flywaydb:flyway-core:5.2.4",
-            "javax.validation:validation-api:2.0.1.Final"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor:$ver.springBoot",
+                "org.projectlombok:lombok:$ver.lombok"
 
-    compile "org.springframework.boot:spring-boot-starter-undertow:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-actuator:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-data-rest:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-data-jpa:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-web:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-aop:2.1.0.RELEASE",
-            "org.springframework.boot:spring-boot-starter-parent:2.1.0.RELEASE"
+    compile "org.apache.commons:commons-lang3:$ver.apacheCommons",
+            "org.postgresql:postgresql:$ver.postgres",
+            "org.flywaydb:flyway-core:$ver.flyway",
+            "javax.validation:validation-api:$ver.validationApi"
 
-    compile "org.springframework.cloud:spring-cloud-starter-config:2.0.2.RELEASE",
-            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.0.2.RELEASE",
-            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.0.2.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-undertow:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-actuator:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-data-rest:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-data-jpa:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-web:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-aop:$ver.springBoot",
+            "org.springframework.boot:spring-boot-starter-parent:$ver.springBoot"
 
-    compile "org.hibernate:hibernate-validator:6.0.13.Final",
-            "org.hibernate:hibernate-core:5.3.6.Final",
-            "org.hibernate:hibernate-entitymanager:5.3.6.Final",
-            "org.hibernate:hibernate-java8:5.3.6.Final"
+    compile "org.springframework.cloud:spring-cloud-starter-config:$ver.springCloud",
+            "org.springframework.cloud:spring-cloud-starter-netflix-hystrix:$ver.springCloud",
+            "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$ver.springCloud"
 
-    testCompile "org.springframework.boot:spring-boot-starter-test:2.1.0.RELEASE",
-                "org.junit.jupiter:junit-jupiter-api:5.3.1",
-                "org.junit.jupiter:junit-jupiter-params:5.3.1",
-                "org.junit.vintage:junit-vintage-engine:5.3.1",
-                "org.testcontainers:testcontainers:1.10.1"
+    compile "org.hibernate:hibernate-validator:$ver.hibernate",
+            "org.hibernate:hibernate-core:$ver.hibernate",
+            "org.hibernate:hibernate-entitymanager:$ver.hibernate",
+            "org.hibernate:hibernate-java8:$ver.hibernate"
 
-    testCompileOnly "org.projectlombok:lombok:1.18.4"
+    testCompile "org.springframework.boot:spring-boot-starter-test:$ver.springBoot",
+                "org.junit.jupiter:junit-jupiter-api:$ver.junit",
+                "org.junit.jupiter:junit-jupiter-params:$ver.junit",
+                "org.junit.vintage:junit-vintage-engine:$ver.junit",
+                "org.testcontainers:testcontainers:$ver.testcontainers"
 
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+    testCompileOnly "org.projectlombok:lombok:$ver.lombok"
+
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$ver.junit"
 }
 
 configurations.all {

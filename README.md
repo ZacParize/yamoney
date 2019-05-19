@@ -48,7 +48,8 @@ Example:
     
     http://localhost:8001/api/payment/load?req_id=1
     
-    [{"sender":"s1","receiver":"r1","amount":100}, {"sender":"r1","receiver":"r2","amount":100}]
+    [ {"sender":"s1","receiver":"r1","amount":100, "createDate": "2020-06-16T09:30:07.109Z"}
+    , {"sender":"r1","receiver":"r2","amount":100} ]
 
 ### 2) POST /api/payment/count-by-receiver/{receiver}?req_id={reqId} - count received amount by receiver
 

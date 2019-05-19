@@ -50,7 +50,8 @@ dependencies {
                 "org.junit.jupiter:junit-jupiter-api:$ver.junit",
                 "org.junit.jupiter:junit-jupiter-params:$ver.junit",
                 "org.junit.vintage:junit-vintage-engine:$ver.junit",
-                "org.testcontainers:testcontainers:$ver.testcontainers"
+                "org.testcontainers:testcontainers:$ver.testcontainers",
+                "org.testcontainers:postgresql:$ver.testcontainers"
 
     testCompileOnly "org.projectlombok:lombok:$ver.lombok"
 
@@ -67,7 +68,6 @@ configurations.all {
     all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
 }
 
-//allow to put resources next to java code
 sourceSets {
     test {
         resources {

@@ -94,6 +94,7 @@ public class PaymentService {
         return result == null ? NumberUtils.DOUBLE_ZERO : result;
     }
 
+
     @Transactional(readOnly = true)
     public Double countBalance(String actor, ZonedDateTime from, ZonedDateTime to) {
         if (StringUtils.isBlank(actor)) {

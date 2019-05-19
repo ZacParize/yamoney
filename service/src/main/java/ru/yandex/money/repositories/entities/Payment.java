@@ -9,7 +9,6 @@
 
 package ru.yandex.money.repositories.entities;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -26,13 +25,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Payment entity
+ */
 @Entity
 @Table(name = "payments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Validated
-public class Payment implements Serializable {
+public class Payment {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

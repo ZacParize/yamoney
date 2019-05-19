@@ -28,6 +28,10 @@ P.S: for terminating all connections:
 
 SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = 'dbpayments';
 
+## Build
+
+gradle clean build
+
 ## API Reference
 
 There is no specified API module in project.

@@ -9,7 +9,7 @@
 
 group = 'ru.yandex.money.service'
 
-rootProject.wrapper.gradleVersion = '4.6'
+rootProject.wrapper.gradleVersion = '5.2.1'
 
 buildscript {
     ext {
@@ -44,8 +44,7 @@ buildscript {
 
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:$ver.dependencyManagement",
-                  "org.springframework.boot:spring-boot-gradle-plugin:$ver.springBoot",
-                  "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.4.3"
+                  "org.springframework.boot:spring-boot-gradle-plugin:$ver.springBoot"
     }
 }
 

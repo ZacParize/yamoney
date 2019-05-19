@@ -114,13 +114,13 @@ class PaymentServiceTest {
     @DisplayName("PaymentService.countBySender(correct sender; correct from date; correct to date)")
     @MethodSource("countBySender_parametersForOk")
     void countBySender_ok(String sender, ZonedDateTime from, ZonedDateTime to) {
-        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countBySenderReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), isNull(), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class))).thenReturn(10.0);
-        assertEquals(paymentService.countBySender(sender, from, to), Double.valueOf(10.0));
+        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countBySenderReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), isNull(), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class))).thenReturn(10.0d);
+        assertEquals(paymentService.countBySender(sender, from, to), Double.valueOf(10.0d));
     }
 
     private static Stream<Arguments> countBySender_parametersForFail() {
@@ -152,13 +152,13 @@ class PaymentServiceTest {
     @DisplayName("PaymentService.countByReceiver(correct receiver; correct from date; correct to date)")
     @MethodSource("countByReceiver_parametersForOk")
     void countByReceiver_ok(String receiver, ZonedDateTime from, ZonedDateTime to) {
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiverReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull(), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class))).thenReturn(10.0);
-        assertEquals(paymentService.countByReceiver(receiver, from, to), Double.valueOf(10.0));
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiverReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull(), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class))).thenReturn(10.0d);
+        assertEquals(paymentService.countByReceiver(receiver, from, to), Double.valueOf(10.0d));
     }
 
     private static Stream<Arguments> countByReceiver_parametersForFail() {
@@ -190,19 +190,19 @@ class PaymentServiceTest {
     @DisplayName("PaymentService.countBalance(correct actor; correct from date; correct to date)")
     @MethodSource("countBalance_parametersForOk")
     void countBalance_ok(String actor, ZonedDateTime from, ZonedDateTime to) {
-        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(5.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class))).thenReturn(5.0);
-        Mockito.when(paymentRepository.countBySenderReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(5.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), isNull(), isNull())).thenReturn(5.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class), isNull())).thenReturn(5.0);
-        Mockito.when(paymentRepository.countBySender(any(String.class))).thenReturn(5.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiverReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull(), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull())).thenReturn(10.0);
-        Mockito.when(paymentRepository.countByReceiver(any(String.class))).thenReturn(10.0);
-        assertEquals(paymentService.countBalance(actor, from, to), Double.valueOf(5.0));
+        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), any(ZonedDateTime.class))).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countBySenderReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), isNull(), isNull())).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class), isNull())).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countBySender(any(String.class))).thenReturn(5.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiverReverse(any(String.class), any(ZonedDateTime.class))).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull(), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class), isNull())).thenReturn(10.0d);
+        Mockito.when(paymentRepository.countByReceiver(any(String.class))).thenReturn(10.0d);
+        assertEquals(paymentService.countBalance(actor, from, to), Double.valueOf(5.0d));
     }
 
     private static Stream<Arguments> countBalance_parametersForFail() {

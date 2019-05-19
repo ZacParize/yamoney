@@ -6,7 +6,7 @@ Microservice for very simple money transfers with horizontal sharding.
 
 1) Simple clone the project (git clone https://github.com/ZacParize/yamoney.git);
 
-2) Execute in local posgtres:
+2) Execute in local postgres:
 
 DROP DATABASE IF EXISTS dbpayments;
 
@@ -38,7 +38,7 @@ The microservice returns values "as is".
 
 Methods:
 
-1) POST /api/payment/load?req_id={reqId} - load batch of payments.
+# 1) POST /api/payment/load?req_id={reqId} - load batch of payments.
 
 BODY: array of payments.
 
@@ -50,7 +50,7 @@ Example:
     
     [{"sender":"s1","receiver":"r1","amount":100}, {"sender":"r1","receiver":"r2","amount":100}]
 
-2) POST /api/payment/count-by-receiver/{receiver}?req_id={reqId} - count received amount by receiver
+# 2) POST /api/payment/count-by-receiver/{receiver}?req_id={reqId} - count received amount by receiver
 
 BODY: [from, to] range.
 
@@ -60,7 +60,7 @@ Example:
     
     { "from" : "2020-01-16T16:30:07.109+07:00", "to" : "2020-12-16T16:30:07.109+07:00" }
 
-3) POST /api/payment/count-by-sender/{sender}?req_id={reqId} - count sent amount by sender
+# 3) POST /api/payment/count-by-sender/{sender}?req_id={reqId} - count sent amount by sender
 
 BODY: [from, to] range.
 
@@ -70,7 +70,7 @@ Example:
     
     { "from" : "2020-01-16T16:30:07.109+07:00", "to" : "2020-12-16T16:30:07.109+07:00" }
 
-4) POST /api/payment/count-balance/{actor}?req_id={reqId} - count balance by actor
+# 4) POST /api/payment/count-balance/{actor}?req_id={reqId} - count balance by actor
 
 BODY: [from, to] range.
 

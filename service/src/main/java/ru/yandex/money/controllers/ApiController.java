@@ -76,6 +76,7 @@ public class ApiController {
      * @param reqId request id
      * @param listOfPayments list of payments for loading
      * @return list of loaded payments
+     * @see PaymentService#addAll(List)
      */
     @PostMapping("payment/load")
     public List<Payment> load( @RequestParam("req_id") @NotBlank String reqId
@@ -91,6 +92,7 @@ public class ApiController {
      * @param actor payment sender
      * @param request request contains start and end date of period
      * @return sum of payments
+     * @see PaymentService#countBySender(String, ZonedDateTime, ZonedDateTime)
      */
     @PostMapping("payment/count-by-sender/{actor}")
     public Double countBySender( @PathVariable("actor") @NotBlank String actor
@@ -108,6 +110,7 @@ public class ApiController {
      * @param actor payment sender
      * @param request request contains start and end date of period
      * @return sum of payments
+     * @see PaymentService#countByReceiver(String, ZonedDateTime, ZonedDateTime)
      */
     @PostMapping("payment/count-by-receiver/{actor}")
     public Double countByReceiver( @PathVariable("actor") @NotBlank String actor
@@ -125,6 +128,7 @@ public class ApiController {
      * @param actor payment sender
      * @param request request contains start and end date of period
      * @return balance of payments
+     * @see PaymentService#countBalance(String, ZonedDateTime, ZonedDateTime)
      */
     @PostMapping("payment/count-balance/{actor}")
     public Double countBalance( @PathVariable("actor") @NotBlank String actor

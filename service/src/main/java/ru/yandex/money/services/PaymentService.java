@@ -46,8 +46,8 @@ public class PaymentService {
     /**
      * Loads list of payments
      * @param listOfPayments list of payments for loading
-     * @throws IllegalArgumentException if size of payments list is too big
      * @return list of loaded payments
+     * @throws IllegalArgumentException if size of payments list is too big
      */
     public List<Payment> addAll(List<Payment> listOfPayments) {
         if (CollectionUtils.isEmpty(listOfPayments)) {
@@ -72,8 +72,8 @@ public class PaymentService {
      * @param sender payment sender
      * @param from start date of period
      * @param to end date of period
-     * @throws IllegalArgumentException if no sender
      * @return sum of payments
+     * @throws IllegalArgumentException if no sender
      */
     @Transactional(readOnly = true)
     public Double countBySender(String sender, ZonedDateTime from, ZonedDateTime to) {
@@ -99,6 +99,7 @@ public class PaymentService {
      * @param from start date of period
      * @param to end date of period
      * @return sum of payments
+     * @throws IllegalArgumentException if no receiver
      */
     @Transactional(readOnly = true)
     public Double countByReceiver(String receiver, ZonedDateTime from, ZonedDateTime to) {
@@ -124,6 +125,7 @@ public class PaymentService {
      * @param from start date of period
      * @param to end date of period
      * @return balance of payments
+     * @throws IllegalArgumentException if no actor
      */
     @Transactional(readOnly = true)
     public Double countBalance(String actor, ZonedDateTime from, ZonedDateTime to) {

@@ -40,7 +40,7 @@ import ru.yandex.money.services.PaymentService;
 @Validated
 @RestController
 @Slf4j
-@RequestMapping(value = "api", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "api", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ApiController {
 
     private final PaymentService paymentService;
@@ -143,9 +143,11 @@ public class ApiController {
     @ExceptionHandler(Exception.class)
     public String processException(HttpServletRequest request, HttpServletResponse response, Exception e) {
         String reqId = request.getParameter("req_id");
+        if (StringUtils.isBlank(reqId)) {
+            reqId = "[empty req_id]";
+        }
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        reqId = StringUtils.isBlank(reqId) ? "№[empty req_id]" : "№" + reqId;
-        log.error("Error during request {} processing: {}", reqId, e.getLocalizedMessage());
-        return "Internal service error during request " + reqId + " processing";
+        log.error("Error during request №{} processing: {}", reqId, e.getLocalizedMessage());
+        return "Internal service error during request №" + reqId + " processing";
     }
 }

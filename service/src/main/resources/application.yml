@@ -84,8 +84,7 @@ spring:
   messages:
     basename: messages, apidoc, ValidationMessages
   autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+    exclude: org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   mandatory-file-encoding: UTF-8
   mvc:
     locale: ru_RU
